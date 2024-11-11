@@ -8,7 +8,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: LightMaterial
-  m_Shader: {fileID: 4800000, guid: 5bc7f9c5a5ec6854db0f426ece87b690, type: 3}
+  m_Shader: {fileID: 4800000, guid: fedb41e015d3f0544bbdf91e9d7bc8df, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -67,7 +67,8 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    m_Ints: []
+    m_Ints:
+    - _lightType: 2
     m_Floats:
     - _BumpScale: 1
     - _Cutoff: 0.5
@@ -86,15 +87,21 @@ Material:
     - _UVSec: 0
     - _ZWrite: 1
     - _alphaCutOff: 0.5
+    - _lightIntensity: 2.63
     - _mainTexAlpha: 0.5
-    - _smoothness: 0.723
+    - _smoothness: 0.407
     - _specularStrength: 0.5
+    - _spotLightCutOff: 83
+    - _spotLightInnerCutOff: 42
     - _subTexAlpha: 0.5
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
+    - _attenuation: {r: 1, g: 0.09, b: 0.032, a: 0}
+    - _lightAttenuation: {r: 0, g: 0, b: 0, a: 0}
     - _lightColor: {r: 1, g: 1, b: 1, a: 0}
     - _lightDirection: {r: 0, g: -0.9987036, b: 0.050903164, a: 0}
-    - _lightPosition: {r: -0.14504145, g: 3.82, b: 1.79, a: 0}
+    - _lightPosition: {r: -0.14504145, g: 0.63, b: 0.3, a: 0}
     - _tint: {r: 1, g: 1, b: 1, a: 1}
+    - attenuation: {r: 0, g: 0, b: 0, a: 0}
   m_BuildTextureStacks: []

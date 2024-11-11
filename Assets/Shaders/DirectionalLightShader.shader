@@ -1,4 +1,4 @@
-Shader "Custom/LightShader"
+Shader "Custom/DirectionalLightShader"
 {
 	Properties{
 		_mainTexture("Albedo", 2D) = "white"{}
@@ -12,11 +12,6 @@ Shader "Custom/LightShader"
 		_lightColor("Light Color", Color) = (1,1,1,1)
 		_specularStrength("Specular Strength", Range(0,1)) = 0.5
 		_smoothness("Smoothness", Range(0,1)) = 0.5
-		_lightType("Light Type", Integer) = 1
-		_lightIntensity("Light Intensity", float) = 1
-		_attenuation("Light Attenuation", Vector) = (1.0, 0.09, 0.032)
-		_spotLightCutOff("Spot Light CutOff", Range(0, 360)) = 70.0
-		_spotLightInnerCutOff("Spot Light Inner CutOff", Range(0,360)) = 25.0
 	}
 
 		SubShader{
@@ -38,17 +33,12 @@ Shader "Custom/LightShader"
 				uniform float _mainTexAlpha;
 				uniform float _subTexAlpha;
 
-				//Light Data
 				uniform float3 _lightPosition;
 				uniform float3 _lightDirection;
 				uniform float4 _lightColor;
 				uniform float _specularStrength;
 				uniform float _smoothness;
-				uniform int _lightType;
-				uniform float _lightIntensity;
-				uniform float3 _attenuation;
-				uniform float _spotLightCutOff;
-				uniform float _spotLightInnerCutOff;
+
 
 				struct vertexData {
 					float2 uv: TEXCOORD0;
@@ -78,53 +68,15 @@ Shader "Custom/LightShader"
 				float4 MyFragmentShader(vertex2Fragment v2f) : SV_TARGET
 				{
 					v2f.normal = normalize(v2f.normal);
-					
-					float3 attenuation = 1.0;
-
-					float3 finalLightDirection;
-					if (_lightType == 0) //If light is directional Light
-					{
-						finalLightDirection = _lightDirection;
-					}
-					else //if spot light / point light
-					{
-						finalLightDirection = normalize(v2f.worldPosition - _lightPosition); 
-
-
-						float distance = length(v2f.worldPosition - _lightPosition);
-						attenuation = 1.0 / (_attenuation.x + _attenuation.y * distance + _attenuation.z * distance * distance);
-
-						if (_lightType == 2)
-						{
-
-							float theta = dot(finalLightDirection, _lightDirection);
-							float angle = cos(radians(_spotLightCutOff));
-							if (theta > angle)
-							{
-								float epsilon = cos(radians(_spotLightInnerCutOff)) - angle;
-								float intensity = clamp((theta - angle) / epsilon, 0.0, 1.0);
-								attenuation *= intensity;
-							}
-							else
-							{
-								attenuation = 0.0;
-							}
-						}
-
-					}
-
-
-
-
 
 					float4 albedo = tex2D(_mainTexture, v2f.uv) * _tint;
-					float3 viewDirection = normalize(_WorldSpaceCameraPos - v2f.worldPosition);
-					float3 reflectionDirection = reflect(-finalLightDirection, v2f.normal);
-					float3 halfVector = normalize((viewDirection - finalLightDirection));
+					float3 viewDirection = normalize(_lightPosition - v2f.normal);
+					float3 reflectionDirection = reflect(-_lightDirection, v2f.normal);
+					float3 halfVector = normalize((viewDirection - _lightDirection));
 					float specular = pow(float(saturate(dot(v2f.normal, halfVector))), _smoothness * 100);
 					float3 specularColor = specular * _specularStrength * _lightColor.rgb;
-					float3 diffuse = albedo.xyz * _lightColor * saturate(dot(-finalLightDirection, v2f.normal));
-					float3 finalColor = (specularColor + diffuse) * _lightIntensity * attenuation;
+					float3 diffuse = albedo.xyz * _lightColor * saturate(dot(-_lightDirection, v2f.normal));
+					float3 finalColor = specularColor + diffuse;
 					return float4(finalColor, albedo.a);
 					//float4 result = float4(diffuse, 1.0);
 
