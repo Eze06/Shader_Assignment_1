@@ -74,4 +74,14 @@ public class LightObject : MonoBehaviour
         material.SetFloat("_spotLightCutOff", SpotLightCutOff);
         material.SetFloat("_spotLightInnerCutOff", SpotLightInnerCutOff);
     }
+
+    public Vector3 GetDirection()
+    {
+        return direction;
+    }
+
+    public Material GetMaterial()
+    {
+        return material;
+    }
 }

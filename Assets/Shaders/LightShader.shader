@@ -50,6 +50,12 @@ Shader "Custom/LightShader"
 				uniform float _spotLightCutOff;
 				uniform float _spotLightInnerCutOff;
 
+				uniform sampler2D _shadowMap;
+				uniform float4x4 _lightViewProj;
+				uniform float _shadowBias;
+
+				float ShadowCalculation(float4 fragPosLightSpace);
+
 				struct vertexData {
 					float2 uv: TEXCOORD0;
 					float4 position: POSITION;
@@ -62,6 +68,7 @@ Shader "Custom/LightShader"
 					float4 position : SV_POSITION;
 					float3 normal: NORMAL;
 					float3 worldPosition : POSITION1;
+					float4 shadowCoord: POSITION2;
 				};
 
 				vertex2Fragment MyVertexShader(vertexData vd)
@@ -72,6 +79,8 @@ Shader "Custom/LightShader"
 					v2f.uv = TRANSFORM_TEX(vd.uv, _mainTexture);
 					v2f.normal = UnityObjectToWorldNormal(vd.normal);
 
+					v2f.shadowCoord = mul(_lightViewProj, float4(v2f.worldPosition, 1.0));
+
 					return v2f;
 				}
 
@@ -79,9 +88,16 @@ Shader "Custom/LightShader"
 				{
 					v2f.normal = normalize(v2f.normal);
 					
-					float3 attenuation = 1.0;
+					float4 albedo = tex2D(_mainTexture, v2f.uv) * _tint;
+
+					if (albedo.a < _alphaCutOff)
+						discard;
+
+					float shadowFactor = ShadowCalculation(v2f.shadowCoord);
 
 					float3 finalLightDirection;
+					float3 attenuation = 1.0;
+
 					if (_lightType == 0) //If light is directional Light
 					{
 						finalLightDirection = _lightDirection;
@@ -113,21 +129,29 @@ Shader "Custom/LightShader"
 
 					}
 
-
-
-
-
-					float4 albedo = tex2D(_mainTexture, v2f.uv) * _tint;
 					float3 viewDirection = normalize(_WorldSpaceCameraPos - v2f.worldPosition);
 					float3 reflectionDirection = reflect(-finalLightDirection, v2f.normal);
 					float3 halfVector = normalize((viewDirection - finalLightDirection));
 					float specular = pow(float(saturate(dot(v2f.normal, halfVector))), _smoothness * 100);
 					float3 specularColor = specular * _specularStrength * _lightColor.rgb;
 					float3 diffuse = albedo.xyz * _lightColor * saturate(dot(-finalLightDirection, v2f.normal));
-					float3 finalColor = (specularColor + diffuse) * _lightIntensity * attenuation;
+					float3 finalColor = (specularColor + diffuse) * _lightIntensity * attenuation * shadowFactor;
 					return float4(finalColor, albedo.a);
 					//float4 result = float4(diffuse, 1.0);
 
+				}
+
+				float ShadowCalculation(float4 fragPosLightSpace)
+				{
+					float3 shadowCoord = fragPosLightSpace.xyz / fragPosLightSpace.w;
+
+					shadowCoord = shadowCoord * 0.5 + 0.5;
+
+					float shadowDepth = 1.0 - tex2D(_shadowMap, shadowCoord.xy).r;
+					float shadowFactor = (shadowCoord.z - _shadowBias > shadowDepth) ? 1.0 : 0.0;
+					shadowFactor = saturate(1.0 - shadowFactor);
+
+					return shadowFactor;
 				}
 
 

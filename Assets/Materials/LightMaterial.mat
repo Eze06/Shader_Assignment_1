@@ -101,7 +101,7 @@ Material:
     - _lightAttenuation: {r: 0, g: 0, b: 0, a: 0}
     - _lightColor: {r: 1, g: 1, b: 1, a: 0}
     - _lightDirection: {r: 0, g: -0.9987036, b: 0.050903164, a: 0}
-    - _lightPosition: {r: -0.14504145, g: 0.63, b: 0.3, a: 0}
+    - _lightPosition: {r: -0.14504145, g: 1.54, b: 0.25, a: 0}
     - _tint: {r: 1, g: 1, b: 1, a: 1}
     - attenuation: {r: 0, g: 0, b: 0, a: 0}
   m_BuildTextureStacks: []
