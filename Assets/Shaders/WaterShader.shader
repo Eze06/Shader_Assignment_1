@@ -8,7 +8,7 @@ Shader "Custom/WaterShader"
 		_subTexAlpha("SubTextureAlpha", Range(0,1)) = 0.5
 
 			//Wave properties
-		_waveCount("Wave Count" Integer) = 4
+		_waveCount("Wave Count", Integer) = 4
 
 
 		_lightPosition("Light Position", Vector) = (0,0,0)

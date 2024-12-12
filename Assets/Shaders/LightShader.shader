@@ -71,6 +71,14 @@ Shader "Custom/LightShader"
 					float4 shadowCoord: POSITION2;
 				};
 
+				struct wave
+				{
+					float amplitude;
+					float frequency;
+					float speed;
+					float3 direction;
+				};
+
 				vertex2Fragment MyVertexShader(vertexData vd)
 				{
 					vertex2Fragment v2f;
