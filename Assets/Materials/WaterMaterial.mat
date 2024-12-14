@@ -8,7 +8,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: WaterMaterial
-  m_Shader: {fileID: 46, guid: 0000000000000000f000000000000000, type: 0}
+  m_Shader: {fileID: 4800000, guid: 63ba67c0d2b4fa2458b9ed90608b6b8d, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -59,7 +59,25 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    m_Ints: []
+    - _mainTexture:
+        m_Texture: {fileID: 2800000, guid: a48fe45e9c4b2764ab194db155bab815, type: 3}
+        m_Scale: {x: 9.69, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _refectionTexture:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _reflectionTexture:
+        m_Texture: {fileID: 8900000, guid: 99af420a4ccafa74abdc47436d8b0685, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _subTexture:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints:
+    - _lightType: 0
+    - _waveCount: 4
     m_Floats:
     - _BumpScale: 1
     - _Cutoff: 0.5
@@ -77,7 +95,20 @@ Material:
     - _SrcBlend: 1
     - _UVSec: 0
     - _ZWrite: 1
+    - _alphaCutOff: 0.5
+    - _lightIntensity: 1.8
+    - _mainTexAlpha: 0.5
+    - _smoothness: 0.515
+    - _specularStrength: 0.5
+    - _spotLightCutOff: 83
+    - _spotLightInnerCutOff: 42
+    - _subTexAlpha: 0.5
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
+    - _attenuation: {r: 1, g: 0.09, b: 0.032, a: 0}
+    - _lightColor: {r: 1, g: 1, b: 1, a: 0}
+    - _lightDirection: {r: 0.1971621, g: -0.5726432, b: 0.795743, a: 0}
+    - _lightPosition: {r: -5.78, g: 8.45, b: -19.35, a: 0}
+    - _tint: {r: 0.18970276, g: 0.39304224, b: 0.46226418, a: 1}
   m_BuildTextureStacks: []

@@ -59,8 +59,16 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _diffuseTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _mainTexture:
         m_Texture: {fileID: 2800000, guid: 8c64a8fb35b125941bd795f4f944fbcd, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _normalTexture:
+        m_Texture: {fileID: 2800000, guid: 7f0ee7d1ae2f5bf4aa74ef0222d5e335, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _subTexture:
@@ -68,7 +76,8 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Ints:
-    - _lightType: 2
+    - _lightType: 0
+    - _numLights: 2
     m_Floats:
     - _BumpScale: 1
     - _Cutoff: 0.5
@@ -87,21 +96,23 @@ Material:
     - _UVSec: 0
     - _ZWrite: 1
     - _alphaCutOff: 0.5
-    - _lightIntensity: 2.63
+    - _lightIntensity: 1.8
     - _mainTexAlpha: 0.5
-    - _smoothness: 0.407
+    - _shadowSoftness: 1
+    - _smoothness: 0.515
     - _specularStrength: 0.5
     - _spotLightCutOff: 83
     - _spotLightInnerCutOff: 42
     - _subTexAlpha: 0.5
+    - _useNormalMap: 0
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _attenuation: {r: 1, g: 0.09, b: 0.032, a: 0}
     - _lightAttenuation: {r: 0, g: 0, b: 0, a: 0}
     - _lightColor: {r: 1, g: 1, b: 1, a: 0}
-    - _lightDirection: {r: 0, g: -0.9987036, b: 0.050903164, a: 0}
-    - _lightPosition: {r: -0.14504145, g: 1.54, b: 0.25, a: 0}
+    - _lightDirection: {r: 0.1971621, g: -0.5726432, b: 0.795743, a: 0}
+    - _lightPosition: {r: -5.78, g: 8.45, b: -19.35, a: 0}
     - _tint: {r: 1, g: 1, b: 1, a: 1}
     - attenuation: {r: 0, g: 0, b: 0, a: 0}
   m_BuildTextureStacks: []

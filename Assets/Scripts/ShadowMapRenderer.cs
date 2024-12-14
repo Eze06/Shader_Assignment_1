@@ -5,21 +5,27 @@ using UnityEngine;
 
 public class ShadowMapRenderer : MonoBehaviour
 {
-    [SerializeField] private LightObject lightObject;
+    [SerializeField] private lightManager lightManager;
 
     [SerializeField] private int shadowMapResolution = 1024;
 
     [SerializeField] private float shadowBias = 0.005f;
 
-    private Camera lightCam;
-    private RenderTexture shadowMap;
+    [SerializeField] private Material waterMat; 
+
+    private Camera[] lightCam;
+    private RenderTexture[] shadowMaps;
 
     // Start is called before the first frame update
+    private void OnEnable()
+    {
+        shadowMaps = new RenderTexture[lightManager.numLights];
+        lightCam = new Camera[lightManager.numLights];
+    }
     void Start()
     {
-        lightObject = GetComponent<LightObject>();
 
-        if(lightObject == null)
+        if(lightManager == null)
         {
             Debug.LogError("ShadowMapper requires a light object");
             return;
@@ -31,7 +37,7 @@ public class ShadowMapRenderer : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (lightCam == null || shadowMap == null)
+        if (lightCam == null || shadowMaps == null)
             return;
 
         UpdateLightCamera();
@@ -40,61 +46,93 @@ public class ShadowMapRenderer : MonoBehaviour
 
     void CreateLightCamera()
     {
-        shadowMap = new RenderTexture(shadowMapResolution, shadowMapResolution, 24, RenderTextureFormat.Depth);
-        shadowMap.Create();
 
-        GameObject lightCamObject = new GameObject("Light Camera");
-        lightCam = lightCamObject.AddComponent<Camera>();
-        lightCam.enabled = false;
-        lightCam.clearFlags = CameraClearFlags.Depth;
-        lightCam.backgroundColor = Color.white;
-        lightCam.targetTexture = shadowMap;
 
-        lightCam.nearClipPlane = 0.1f;
-        lightCam.farClipPlane = 100f;
-        lightCam.orthographic = true;
-        lightCam.orthographicSize = 30;
+        for (int i = 0; i < lightManager.numLights; i++)
+        {
+            shadowMaps[i] = new RenderTexture(shadowMapResolution, shadowMapResolution, 24, RenderTextureFormat.Depth);
+            shadowMaps[i].Create();
 
-        lightCamObject.transform.SetParent(lightObject.transform, false);
+            GameObject lightCamObject = new GameObject("Light Camera");
+            lightCam[i] = lightCamObject.AddComponent<Camera>();
+            lightCam[i].enabled = false;
+            lightCam[i].clearFlags = CameraClearFlags.Depth;
+            lightCam[i].backgroundColor = Color.white;
+            lightCam[i].targetTexture = shadowMaps[i];
+
+            lightCam[i].nearClipPlane = 0.1f;
+            lightCam[i].farClipPlane = 100f;
+            lightCam[i].orthographic = true;
+            lightCam[i].orthographicSize = 30;
+
+            lightCam[i].cullingMask = ~(1 << LayerMask.NameToLayer("NoShadowCast"));
+
+            lightCamObject.transform.SetParent(lightManager.lightObjects[i].transform, false);
+        }
+
     }
 
     void UpdateLightCamera()
     {
-        lightCam.transform.position = lightObject.transform.position;
-        lightCam.transform.forward = lightObject.GetDirection();
+        for(int i = 0; i < lightManager.numLights;i++)
+        {
+            lightCam[i].transform.position = lightManager.lightObjects[i].transform.position;
+            lightCam[i].transform.forward = lightManager.lightObjects[i].GetDirection();
+            lightCam[i].Render();
 
-        lightCam.Render();
+        }
+
+
     }
 
     void SendShadowDataToSender()
     {
-        Material material = lightObject.GetMaterial();
-        if (material == null)
+        List<Material> materials = lightManager.materialList;
+        if (materials == null)
             return;
 
-        Matrix4x4 lightViewProjMatrix = lightCam.projectionMatrix * lightCam.worldToCameraMatrix;
+        for(int j = 0; j < lightManager.numLights; j++)
+        {
+            Matrix4x4 lightViewProjMatrix = lightCam[j].projectionMatrix * lightCam[j].worldToCameraMatrix;
 
-        material.SetTexture("_shadowMap", shadowMap);
-        material.SetFloat("_shadowBias", shadowBias);
-        material.SetMatrix("_lightViewProj", lightViewProjMatrix);
+            for (int i = 0; i < materials.Count; i++)
+            {
+                if (materials[i] == waterMat) continue;
+                materials[i].SetTexture($"_ShadowMap{j}", shadowMaps[j]);
+
+                materials[i].SetFloat("_shadowBias", shadowBias);
+                materials[i].SetMatrix($"_LightViewProj{j}", lightViewProjMatrix);
+            }
+        }
+
+
     }
 
     private void OnDestroy()
     {
-        if(shadowMap != null)
+        if (shadowMaps != null)
         {
-            shadowMap.Release();
+            for (int i = 0; i < shadowMaps.Length; i++)
+            {
+                if (shadowMaps[i] != null)
+                {
+                    shadowMaps[i].Release();
+                }
+            }
         }
-        if(lightCam != null)
+        for (int i = 0; i < lightManager.numLights; i++)
         {
-            Destroy(lightCam.gameObject);
+            if (lightCam[i] != null)
+            {
+                Destroy(lightCam[i].gameObject);
+            }
         }
     }
 
-    private void OnGUI()
-    {
-        GUI.DrawTexture(new Rect(10, 10, 512, 512), shadowMap, ScaleMode.ScaleToFit, false);
-    }
+    //private void OnGUI()
+    //{
+    //    GUI.DrawTexture(new Rect(10, 10, 512, 512), shadowMap, ScaleMode.ScaleToFit, false);
+    //}
 
 
 }

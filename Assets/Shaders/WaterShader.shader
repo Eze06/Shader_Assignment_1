@@ -3,6 +3,9 @@ Shader "Custom/WaterShader"
 	Properties{
 		_mainTexture("Albedo", 2D) = "white"{}
 		_subTexture("SubTexture", 2D) = "white"{}
+
+		_reflectionTexture("Reflection Texture", Cube) = "white"{}
+
 		_tint("Tint", Color) = (1,1,1,1)
 		_mainTexAlpha("MainTextureAlpha", Range(0,1)) = 0.5
 		_subTexAlpha("SubTextureAlpha", Range(0,1)) = 0.5
@@ -38,6 +41,7 @@ Shader "Custom/WaterShader"
 				uniform float4 _tint;
 				uniform sampler2D _mainTexture;
 				uniform sampler2D _subTexture;
+				uniform samplerCUBE _reflectionTexture;
 
 				uniform float4 _mainTexture_ST;
 				uniform float _alphaCutOff;
@@ -83,37 +87,72 @@ Shader "Custom/WaterShader"
 					float4 shadowCoord: POSITION2;
 				};
 
-				float GetSine()
+				struct Waves
 				{
+					float amplitude;
+					float wavelength;
+					float speed;
+					float3 direction;
+				};
 
+				uniform StructuredBuffer<Waves> _waves;
+
+				float getWaveHeight (float3 pos, float time)
+				{
+					float height = 0.0;
+					for (int i = 0; i < _waveCount; i++)
+					{
+						float dotProd = dot(normalize(_waves[i].direction), pos.xz);
+						float phaseConstant = _waves[i].speed * (2.0f / _waves[i].wavelength);
+						height += _waves[i].amplitude * exp(sin(dotProd + _waves[i].wavelength + time * phaseConstant)-1);
+					}
+					return height;
 				}
 
 				vertex2Fragment MyVertexShader(vertexData vd)
 				{
 					vertex2Fragment v2f;
 
-					v2f.position = UnityObjectToClipPos(vd.position);	
+					float waveHeight = getWaveHeight(vd.position, _Time.y);
+					float delta = 0.01;
 
+					float heightX = getWaveHeight(vd.position + float3(delta, 0, 0), _Time.y);
+					float heightZ = getWaveHeight(vd.position + float3(0, 0, delta), _Time.y);
 
-					v2f.worldPosition = mul(unity_ObjectToWorld, vd.position);
+					float3 gradientX = float3(delta, heightX - waveHeight, 0);
+					float3 gradientZ = float3(0, heightZ - waveHeight, delta);
+
+					float3 normal = normalize(cross(gradientZ, gradientX));
+
+					v2f.normal = normalize(mul((float3x3)unity_ObjectToWorld, normal));
+
+					float4 displacedPosition = vd.position;
+					displacedPosition.y = waveHeight;
+
+					v2f.position = UnityObjectToClipPos(displacedPosition);
+					v2f.worldPosition = mul(unity_ObjectToWorld, displacedPosition);
+
 					v2f.uv = TRANSFORM_TEX(vd.uv, _mainTexture);
-					v2f.normal = UnityObjectToWorldNormal(vd.normal);
 
 					v2f.shadowCoord = mul(_lightViewProj, float4(v2f.worldPosition, 1.0));
 
 					return v2f;
 				}
 
+
+
+
 				float4 MyFragmentShader(vertex2Fragment v2f) : SV_TARGET
 				{
 					v2f.normal = normalize(v2f.normal);
 					
-					float4 albedo = tex2D(_mainTexture, v2f.uv) * _tint;
+					float4 albedo = /*tex2D(_mainTexture, v2f.uv)*/ _tint;
 
 					if (albedo.a < _alphaCutOff)
 						discard;
 
 					float shadowFactor = ShadowCalculation(v2f.shadowCoord);
+
 
 					float3 finalLightDirection;
 					float3 attenuation = 1.0;
@@ -148,18 +187,22 @@ Shader "Custom/WaterShader"
 						}
 
 					}
-
 					float3 viewDirection = normalize(_WorldSpaceCameraPos - v2f.worldPosition);
-					float3 reflectionDirection = reflect(-finalLightDirection, v2f.normal);
+					float4 fresnel = pow((1 - dot(viewDirection, v2f.normal)), 5);
+
+					float3 reflectionDirection = reflect(-viewDirection, v2f.normal);
+					reflectionDirection.yz = reflectionDirection.zy;
+					float4 reflection = texCUBE(_reflectionTexture, reflectionDirection) * fresnel;
+
 					float3 halfVector = normalize((viewDirection - finalLightDirection));
 					float specular = pow(float(saturate(dot(v2f.normal, halfVector))), _smoothness * 100);
-					float3 specularColor = specular * _specularStrength * _lightColor.rgb;
-					float3 diffuse = albedo.xyz * _lightColor * saturate(dot(-finalLightDirection, v2f.normal));
-					float3 finalColor = (specularColor + diffuse) * _lightIntensity * attenuation * shadowFactor;
-					return float4(finalColor, albedo.a);
-					//float4 result = float4(diffuse, 1.0);
+					float3 specularColor = specular * _specularStrength * _lightColor.rgb * fresnel;
+					float3 diffuse = reflection * _lightColor * saturate(dot(-finalLightDirection, v2f.normal));
+					float3 finalColor = (specularColor + diffuse) * _lightIntensity * attenuation ;
 
+					return float4(finalColor, albedo.a);
 				}
+
 
 				float ShadowCalculation(float4 fragPosLightSpace)
 				{
