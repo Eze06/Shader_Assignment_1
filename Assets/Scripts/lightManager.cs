@@ -23,7 +23,7 @@ public struct Light
 
 public class lightManager : MonoBehaviour
 {
-    public const int numLights = 2;
+    public const int numLights = 3;
     [SerializeField]
     public List<LightObject> lightObjects = new List<LightObject>(numLights);
     [SerializeField]

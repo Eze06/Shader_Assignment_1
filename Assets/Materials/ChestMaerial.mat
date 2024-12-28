@@ -69,7 +69,7 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints:
     - _lightType: 0
-    - _numLights: 2
+    - _numLights: 3
     m_Floats:
     - _BumpScale: 1
     - _Cutoff: 0.5

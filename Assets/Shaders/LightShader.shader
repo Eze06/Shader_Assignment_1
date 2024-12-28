@@ -50,9 +50,12 @@ Shader "Custom/LightShader"
 
 				uniform sampler2D _ShadowMap0;
 				uniform sampler2D _ShadowMap1; 
+				uniform sampler2D _ShadowMap2;
+
 
 				uniform float4x4 _LightViewProj0;
 				uniform float4x4 _LightViewProj1; 
+				uniform float4x4 _LightViewProj2;
 
 				uniform float _shadowBias;
 				uniform float _shadowSoftness;
@@ -152,10 +155,15 @@ Shader "Custom/LightShader"
 						else if (i == 1)
 						{
 							v2f.shadowCoord = mul(_LightViewProj1, float4(v2f.worldPosition, 1.0));
-							shadowFactor = ShadowCalculation(v2f.shadowCoord, _ShadowMap0);
+							shadowFactor = ShadowCalculation(v2f.shadowCoord, _ShadowMap1);
 
 						}
+						else if (i == 2)
+						{
+							v2f.shadowCoord = mul(_LightViewProj2, float4(v2f.worldPosition, 1.0));
+							shadowFactor = ShadowCalculation(v2f.shadowCoord, _ShadowMap2);
 
+						}
 
 						float3 finalLightDirection;
 						float3 attenuation = 1.0;
