@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-7215973016424600823
+--- !u!114 &-6821391871871597563
 MonoBehaviour:
   m_ObjectHideFlags: 3
   m_CorrespondingSourceObject: {fileID: 0}
@@ -9,43 +9,107 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0b2db86121404754db890f4c8dfe81b2, type: 3}
-  m_Name: Bloom
+  m_Script: {fileID: 11500000, guid: 98e3d9c43f26e4a4f9b26f8e84661f80, type: 3}
+  m_Name: BloomEffect
   m_EditorClassIdentifier: 
-  active: 0
-  skipIterations:
-    m_OverrideState: 0
-    m_Value: 1
+  active: 1
+  <displayName>k__BackingField: 
   threshold:
     m_OverrideState: 1
-    m_Value: 0.9
+    m_Value: 4.27
+  softKnee:
+    m_OverrideState: 0
+    m_Value: 0.5
   intensity:
     m_OverrideState: 1
-    m_Value: 50
-  scatter:
+    m_Value: 2.54
+  blurIntensity:
     m_OverrideState: 1
-    m_Value: 0.7
-  clamp:
+    m_Value: 5.4
+  blurSpread:
     m_OverrideState: 0
-    m_Value: 65472
+    m_Value: 1
+  blurAmount:
+    m_OverrideState: 1
+    m_Value: 5
+--- !u!114 &-6084812993604230779
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 78a3e72e9f7a53047b8ccf9e44ec56fe, type: 3}
+  m_Name: GaussianEffect
+  m_EditorClassIdentifier: 
+  active: 1
+  blurIntensity:
+    m_OverrideState: 1
+    m_Value: 0
+--- !u!114 &-4503677326317228076
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a3546d46da50ce34886ab5a6246a1a4a, type: 3}
+  m_Name: VignetteEffect
+  m_EditorClassIdentifier: 
+  active: 1
+  intensity:
+    m_OverrideState: 1
+    m_Value: 0.58
+  feather:
+    m_OverrideState: 1
+    m_Value: 0.34
+  radius:
+    m_OverrideState: 1
+    m_Value: 0.97
   tint:
     m_OverrideState: 1
-    m_Value: {r: 1, g: 1, b: 1, a: 1}
-  highQualityFiltering:
+    m_Value: {r: 0, g: 0, b: 0, a: 0.59607846}
+--- !u!114 &-2821954355751933134
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 514fc0ac9487e7247b7062ef4203cd12, type: 3}
+  m_Name: PixelizeEffect
+  m_EditorClassIdentifier: 
+  active: 1
+  screenHeight:
     m_OverrideState: 1
-    m_Value: 0
-  downscale:
+    m_Value: 1080
+--- !u!114 &-1277373001327879266
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 98e3d9c43f26e4a4f9b26f8e84661f80, type: 3}
+  m_Name: BloomEffect
+  m_EditorClassIdentifier: 
+  active: 1
+  threshold:
     m_OverrideState: 0
-    m_Value: 0
-  maxIterations:
+    m_Value: 1
+  intensity:
     m_OverrideState: 0
-    m_Value: 6
-  dirtTexture:
-    m_OverrideState: 1
-    m_Value: {fileID: 0}
-    dimension: 1
-  dirtIntensity:
-    m_OverrideState: 1
+    m_Value: 1
+  blurIntensity:
+    m_OverrideState: 0
     m_Value: 0
 --- !u!114 &-236809673126507318
 MonoBehaviour:
@@ -101,8 +165,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   components:
   - {fileID: -236809673126507318}
-  - {fileID: -7215973016424600823}
   - {fileID: 2307439773181299220}
+  - {fileID: -6084812993604230779}
+  - {fileID: -2821954355751933134}
+  - {fileID: -4503677326317228076}
 --- !u!114 &2307439773181299220
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -118,4 +184,23 @@ MonoBehaviour:
   active: 1
   blendIntensity:
     m_OverrideState: 1
-    m_Value: 1
+    m_Value: -0.16
+--- !u!114 &2593142688498232545
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f5223df4a742bfc4ca0e35167c82d15e, type: 3}
+  m_Name: OutlineEffect
+  m_EditorClassIdentifier: 
+  active: 1
+  thickness:
+    m_OverrideState: 0
+    m_Value: 0
+  tint:
+    m_OverrideState: 0
+    m_Value: {r: 0, g: 1, b: 0, a: 1}

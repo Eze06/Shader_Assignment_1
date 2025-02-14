@@ -12,7 +12,73 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 47d1a3ff37d8727408ac899b8cf6bb46, type: 3}
   m_Name: BWRenderPassFeature
   m_EditorClassIdentifier: 
-  m_Active: 0
+  m_Active: 1
+--- !u!114 &-6390705334024656959
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0be47bb6b892d5843aea85f0594a03c2, type: 3}
+  m_Name: PixelizeRenderFeature
+  m_EditorClassIdentifier: 
+  m_Active: 1
+--- !u!114 &-3451561527104762818
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c814e703d707dea48a7537b34a615298, type: 3}
+  m_Name: VignetteRenderFeature
+  m_EditorClassIdentifier: 
+  m_Active: 1
+--- !u!114 &-2699851245283642848
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3c5cdb5501a07914dae69a9801ec17dd, type: 3}
+  m_Name: Bloom Effect
+  m_EditorClassIdentifier: 
+  m_Active: 1
+  settings: {extractionMaterial: {fileID: 0}, blurMaterial: {fileID: 0}, compositeMaterial: {fileID: 0}, blurIterations: 10}
+--- !u!114 &-2324806188838244974
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 944fa11697b6d1c4383bee37aff86290, type: 3}
+  m_Name: Gaussian Blur
+  m_EditorClassIdentifier: 
+  m_Active: 1
+--- !u!114 &-1995232005043504495
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 35381dc1e7f6b564a826aa2f38d51436, type: 3}
+  m_Name: bloomPass
+  m_EditorClassIdentifier: 
+  m_Active: 1
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -30,7 +96,10 @@ MonoBehaviour:
     hdrDebugViewPS: {fileID: 4800000, guid: 573620ae32aec764abd4d728906d2587, type: 3}
   m_RendererFeatures:
   - {fileID: -8572988518584317455}
-  m_RendererFeatureMap: f189472e5da00689
+  - {fileID: -2324806188838244974}
+  - {fileID: -6390705334024656959}
+  - {fileID: -3451561527104762818}
+  m_RendererFeatureMap: f189472e5da0068992adaaae16a1bcdfc12744ad5ba74fa73e0c8408149719d0
   m_UseNativeRenderPass: 0
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
   xrSystemData: {fileID: 11400000, guid: 60e1133243b97e347b653163a8c01b64, type: 2}
